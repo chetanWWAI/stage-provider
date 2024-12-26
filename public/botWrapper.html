@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Bot Wrapper</title>
+    <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+    <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+    <style>  
+       :root {
+          --df-messenger-chat-window-width: 100vw;
+          --df-messenger-chat-window-height: 100vh;
+          --df-messenger-message-bot-margin-right: 75px;
+          --df-messenger-chat-padding: 10px;
+          --df-messenger-message-actor-spacing: 16px;
+          --df-messenger-titlebar-title-font-size: 22px;
+          --df-messenger-titlebar-padding: 10px 24px;
+          --df-messenger-input-padding: 16px 8px 24px 24px;
+          /* --df-messenger-chat-window-box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px; */
+          --df-messenger-titlebar-padding: 0 24px 0 0;
+          --df-messenger-titlebar-icon-width: auto; 
+          --df-messenger-message-bot-actor-background: transparent;
+          --df-messenger-message-user-actor-background: transparent;
+
+          --df-messenger-message-actor-image-size: 22px;
+          --df-messenger-message-actor-padding: 6px;
+
+        }
+        
+        @media screen and (max-width: 480px) {
+          :root {
+            /* --df-messenger-chat-window-width: calc(100vw - 20px); */
+            --df-messenger-message-bot-margin-right: 0;
+            --df-messenger-chat-padding: 6px;
+            --df-messenger-message-actor-spacing: 6px;
+            --df-messenger-titlebar-title-font-size: 18px;
+            --df-messenger-titlebar-padding: 0 10px 0 4px;
+            --df-messenger-input-padding: 14px 2px 14px 14px;
+            /* --df-messenger-chat-window-height: 70vh; */
+            --df-messenger-titlebar-icon-width: 300px;
+
+          }
+
+        }
+
+
+        /* var(--df-messenger-message-bot-border, var(--df-messenger-message-border, none)); */
+
+      
+        df-messenger {
+            z-index: 999;
+            position: fixed;
+            --df-messenger-font-color: black;
+            --df-messenger-font-family: "Gill Sans Extrabold", sans-serif;
+            --df-messenger-chat-background: #edf3f8;
+            --df-messenger-message-bot-background: #ffffff;
+            --df-messenger-message-bot-background-color: #ffffff;
+            --df-messenger-message-user-background: #92adda;
+            --df-messenger-chat-bubble-background: #c1d9f9;
+            --df-messenger-message-bot-border: 1px solid #ccd7e9;
+            --df-messenger-message-border: 1px solid #ccd7e9;
+            /* --df-messenger-chat-border-radius: 10px; */
+            /* --df-messenger-message-bot-background: #f1f1f1; */
+            --df-messenger-message-actor-spacing: 6px;
+            --df-messenger-message-user-background: #e3efff;
+            --df-messenger-message-user-font-color: #000000;
+            --df-messenger-message-font-size: 1rem;
+            --df-messenger-titlebar-icon-height: 30px;
+            --df-messenger-titlebar-icon-width: 200px;
+            --df-messenger-titlebar-icon-padding: 0 10px;
+
+            --df-messenger-input-background: #edf3f8; /* #eef4f7 */
+            /* --df-messenger-input-border-top: 1px solid #ccd7e9; */
+
+            --df-messenger-input-box-border-radius: 10px;
+            
+
+            /* #263978   ->   1st main color dark blue */
+            /* #fa0494     -> 2nd main color pink   */
+            /* #04ccfb  ->  3rd color sky blue */
+            /* #eef4f7   -> 4th color background */
+            /* #ffffff   -> 5th color White */
+
+            /* #f5fdff; */
+
+      
+            bottom: -79px;
+            right: 1px;
+        } 
+      
+        .closediv-custom-chatbot-ajn7s7d6bja {
+          background-color: transparent;
+          padding: 10px;
+          cursor: pointer;
+          width: 50px;
+          height: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+  
+        body {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        .new-div {
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 1020;
+          background-color: #ffffff;
+          width: 100%;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          display: none;
+        }
+
+        .new-div-img {
+          margin-left: 10px;
+          height: 60%;
+          max-height: 60%;
+          width: 200px;
+        }
+
+
+        .loader-our-iframe-is-loaded-jbsd54 {
+          position: fixed;
+          top: 45vh;
+          right: 45vw;
+          z-index: 1030;
+          width: 50px;
+          aspect-ratio: 1;
+          --_c:no-repeat radial-gradient(farthest-side,#263978 92%,#0000);
+          background: 
+            var(--_c) top,
+            var(--_c) left,
+            var(--_c) right,
+            var(--_c) bottom;
+          background-size: 12px 12px;
+          animation: l7 1s infinite;
+        }
+        @keyframes l7 {to{transform: rotate(.5turn)}}
+      
+
+
+        </style>
+      <script>
+
+
+    //     function setlocalStorage(msgId, text) {
+    //       msgId.renderCustomText(text, true);
+    //       localStorage.setItem("sessionId", msgId.sessionId);
+    //   }
+
+    //   document.addEventListener("df-messenger-loaded", (event) => {
+    //       const dfMessenger = document.querySelector("df-messenger");
+
+    //       let sessionId = localStorage.getItem("sessionId");
+
+    //       if (dfMessenger.sessionId !== sessionId) {
+    //           setlocalStorage(dfMessenger, "Please enter hi to start the conversation");
+    //       }
+    //   });
+
+    //   /*window.addEventListener("df-chat-open-changed", (event) => {
+    //     if (event.detail.isOpen) {
+    //       var audio = new Audio("./assets/chat_tone.mp3");
+    //       audio.play();
+    //     }
+    //   });*/
+    //   window.addEventListener("df-session-expired", (event) => {
+    //       const messenger = document.querySelector("df-messenger");
+    //       messenger.startNewSession({ retainHistory: true });
+
+    //       setlocalStorage(messenger, "Please enter hi to start the conversation");
+    //   });
+
+    //   window.addEventListener("df-session-ended", (event) => {
+    //       const messenger = document.querySelector("df-messenger");
+
+    //       messenger.startNewSession({ retainHistory: true });
+
+    //       setlocalStorage(messenger, "Session ended");
+    //       setlocalStorage(messenger, "Please enter hi to have a new session");
+
+    // });
+    </script>
+  </head>
+  <body>
+    <div class="new-div" id="new-div">
+
+
+      <!-- <div class="closediv-custom-chatbot-ajn7s7d6bja" onclick="run()"> -->
+        <!-- <span className="action-icon">
+          <svg width="42px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z" fill="#1C354B"></path> </g></svg>
+        </span> -->
+        <!-- <svg width="50px" height="30px" viewBox="0 -12 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>minus</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-414.000000, -1049.000000)" fill="#263978"> <path d="M442,1049 L418,1049 C415.791,1049 414,1050.79 414,1053 C414,1055.21 415.791,1057 418,1057 L442,1057 C444.209,1057 446,1055.21 446,1053 C446,1050.79 444.209,1049 442,1049" id="minus" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+      </div> -->
+    </div> 
+
+    <div id="loader-ifr" class="loader-our-iframe-is-loaded-jbsd54"></div>
+
+    <!-- <df-messenger
+      location="us-central1"
+      project-id="wordworks-422908"
+      agent-id="9bd71033-8402-46b1-953d-769af1df7476"
+      language-code="en"
+      max-query-length="-1"
+      wait-open="true">
+      <df-messenger-chat-bubble
+      chat-title="" expanded="true" chat-title-icon="https://www.wordworksai.com/logo.svg"
+      bot-actor-image="http://127.0.0.1:5501/logo_wihout_text.png" user-actor-image="https://i.ibb.co/L09z3Tv/user-actor.png" df-messenger-chat-window-width="max-content">
+      </df-messenger-chat-bubble>
+    </df-messenger> -->
+    <script>
+      sessionStorage.clear();
+      localStorage.clear();
+
+      const defaultStyle = `
+      :root {
+          --df-messenger-chat-window-width: 100vw;
+          --df-messenger-chat-window-height: 100vh;
+          --df-messenger-message-bot-margin-right: 75px;
+          --df-messenger-chat-padding: 10px;
+          --df-messenger-message-actor-spacing: 16px;
+          --df-messenger-titlebar-title-font-size: 22px;
+          --df-messenger-titlebar-padding: 10px 24px;
+          --df-messenger-input-padding: 16px 8px 24px 24px;
+          /* --df-messenger-chat-window-box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px; */
+          --df-messenger-titlebar-padding: 0 24px 0 0;
+          --df-messenger-titlebar-icon-width: auto; 
+          --df-messenger-message-bot-actor-background: transparent;
+          --df-messenger-message-user-actor-background: transparent;
+
+          --df-messenger-message-actor-image-size: 22px;
+          --df-messenger-message-actor-padding: 6px;
+
+        }
+        
+        @media screen and (max-width: 480px) {
+          :root {
+            /* --df-messenger-chat-window-width: calc(100vw - 20px); */
+            --df-messenger-message-bot-margin-right: 0;
+            --df-messenger-chat-padding: 6px;
+            --df-messenger-message-actor-spacing: 6px;
+            --df-messenger-titlebar-title-font-size: 18px;
+            --df-messenger-titlebar-padding: 0 10px 0 4px;
+            --df-messenger-input-padding: 14px 2px 14px 14px;
+            /* --df-messenger-chat-window-height: 70vh; */
+            --df-messenger-titlebar-icon-width: 300px;
+
+          }
+
+        }
+
+
+        /* var(--df-messenger-message-bot-border, var(--df-messenger-message-border, none)); */
+
+      
+        df-messenger {
+            z-index: 999;
+            position: fixed;
+            --df-messenger-font-color: black;
+            --df-messenger-font-family: "Gill Sans Extrabold", sans-serif;
+            --df-messenger-chat-background: #edf3f8;
+            --df-messenger-message-bot-background: #ffffff;
+            --df-messenger-message-bot-background-color: #ffffff;
+            --df-messenger-message-user-background: #92adda;
+            --df-messenger-chat-bubble-background: #c1d9f9;
+            --df-messenger-message-bot-border: 1px solid #ccd7e9;
+            --df-messenger-message-border: 1px solid #ccd7e9;
+            /* --df-messenger-chat-border-radius: 10px; */
+            /* --df-messenger-message-bot-background: #f1f1f1; */
+            --df-messenger-message-actor-spacing: 6px;
+            --df-messenger-message-user-background: #e3efff;
+            --df-messenger-message-user-font-color: #000000;
+            --df-messenger-message-font-size: 1rem;
+            --df-messenger-titlebar-icon-height: 30px;
+            --df-messenger-titlebar-icon-width: 200px;
+            --df-messenger-titlebar-icon-padding: 0 10px;
+
+            --df-messenger-input-background: #edf3f8; /* #eef4f7 */
+            /* --df-messenger-input-border-top: 1px solid #ccd7e9; */
+
+            --df-messenger-input-box-border-radius: 10px;
+            
+
+            /* #263978   ->   1st main color dark blue */
+            /* #fa0494     -> 2nd main color pink   */
+            /* #04ccfb  ->  3rd color sky blue */
+            /* #eef4f7   -> 4th color background */
+            /* #ffffff   -> 5th color White */
+
+            /* #f5fdff; */
+
+      
+            bottom: -79px;
+            right: 1px;
+        }
+      `;
+
+
+      function addNewCss(newStyle) {
+        const style = document.createElement('style');
+          style.type = 'text/css';
+          
+          // Add CSS rules to the <style> element
+          style.innerHTML = newStyle;
+          
+          // Append the <style> element to the <head> of the document
+          document.head.appendChild(style);
+      }
+
+         function addNewJs(newJs) {
+         // Create a new <script> element
+          const script = document.createElement('script');
+          script.type = 'text/javascript';
+          
+          // Add JavaScript code to the <script> element
+          script.innerHTML = newJs;
+          
+          // Append the <script> element to the <head> or <body> of the document
+          document.head.appendChild(script);
+      }
+
+      
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.has('bot')) {
+        const botCode = searchParams.get('bot');
+        // document.body.innerHTML += JSON.parse(botCode);
+        fetch(`https://app-stage.wordworksai.me/api/wrapper-code/${botCode}`)
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();  // Parse JSON from response
+          })
+          .then(data => {
+            if (data?.bot) {
+              const botCodeData = JSON.parse(data.bot);
+              document.body.innerHTML += botCodeData.html; 
+              addNewCss(botCodeData.style);
+              addNewJs(botCodeData.js);
+              document.getElementById("loader-ifr")?.remove();
+            }
+            // console.log('Success:', data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        }
+      
+    </script>
+   </body>
+  </html>
